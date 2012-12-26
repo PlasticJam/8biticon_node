@@ -1,8 +1,12 @@
+//Locate pidfile
+var pidfile = require('pid');
+pidfile('/var/run/node-pid.pid');
+
 //setup Dependencies
 var connect = require('connect')
     , express = require('express')
     , io = require('socket.io')
-    , port = (process.env.PORT || 8081);
+    , port = (process.env.PORT || 8421);
 
 //Setup Express
 var server = express.createServer();
