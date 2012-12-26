@@ -64,9 +64,9 @@ io.sockets.on('connection', function(socket){
 server.get('/', function(req,res){
   res.render('index.jade', {
     locals : { 
-              title : 'Your Page Title'
-             ,description: 'Your Page Description'
-             ,author: 'Your Name'
+              title : 'Super Mega Test'
+             ,description: 'Super Mega Description'
+             ,author: 'Super Mega Me'
              ,analyticssiteid: 'XXXXXXX' 
             }
   });
