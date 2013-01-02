@@ -1,8 +1,10 @@
 //setup Dependencies
 var im = require('imagemagick'),
+	uuid = require('node-uuid'),
 	pidfile = require('pid'),
-	connect = require('connect'),
+	engines = require('consolidate')
 	express = require('express'),
+	fs = require('fs'),
 	io = require('socket.io'),
 	port = (process.env.PORT || 8421);
 
@@ -10,29 +12,35 @@ var im = require('imagemagick'),
 pidfile('/var/run/node-pid.pid');
 
 //Setup Express
-var server = express.createServer();
-server.configure(function () {
-	server.set('views', __dirname + '/views');
-	server.set('view options', { layout: false });
-	server.use(connect.bodyParser());
-	server.use(express.cookieParser());
-	server.use(express.session({ secret: "shhhhhhhhh!"}));
-	server.use(connect.static(__dirname + '/static'));
-	server.use(server.router);
-});
+var server = express();
 
-//setup the errors
-server.error(function (err, req, res, next) {
+server.engine('jade', engines.jade);
+
+server.set('views', __dirname + '/views');
+server.set('view options', { layout: false });
+server.use(express.bodyParser());
+server.use(express.cookieParser());
+server.use(express.session({ secret: "shhhhhhhhh!"}));
+server.use(express.static('static'));
+server.use(server.router);
+server.use(function (err, req, res, next) {
 	if (err instanceof NotFound) {
-		res.render('404.jade', { locals: {
+		res.render('404.jade',{
 			title: '404 - Not Found', description: '', author: '', analyticssiteid: 'XXXXXXX'
-		}, status: 404 });
+		});
 	} else {
-		res.render('500.jade', { locals: {
+		res.render('500.jade', {
 			title: 'The Server Encountered an Error', description: '', author: '', analyticssiteid: 'XXXXXXX', error: err
-		}, status: 500 });
+		});
 	}
 });
+
+
+if ('mindfreakthemon' == server.get('env')) {
+	console.log('mindfreakthemon\'s-BLACKBOX');
+	im.convert.path = 'D:\\Server\\imagemagick\\convert';
+}
+
 server.listen(port);
 
 //Setup Socket.IO
@@ -55,26 +63,42 @@ io.sockets.on('connection', function (socket) {
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
 
+var structure = require('./static/8bit/js/8settings.json');
+
 server.get('/', function (req, res) {
 	res.render('index.jade', {
-		locals: {
-			title: 'Super Mega Test', description: 'Super Mega Description', author: 'Super Mega Me', analyticssiteid: 'XXXXXXX'
-		}
+		title: 'Super Mega Test', description: 'Super Mega Description', author: 'Super Mega Me', analyticssiteid: 'XXXXXXX'
 	});
 });
 
-server.get('/image', function (req, res) {
-	var im = require('imagemagick');
+server.get('/constructor/download/', function (req, res) {
+	var data = req.body.data || {},
+		gender = ['male', 'female'].indexOf(req.body.gender) === -1
+			? 'male'
+			: req.body.gender;
 
-	var cwd = process.cwd();
+	try {
+		data = JSON.parse(data);
+	} catch (e) {}
 
-	im.composite(['-compose', 'atop', cwd + '/2.jpg', cwd + '/1.jpg', cwd + '/out.jpg'], function (err, stdout, stderr) {
+	var image_dir = './static/8bit/img/' + gender + '/',
+		output_image = './media/' + uuid.v1() + '.jpg',
+		command = ['-size', '400x400', 'xc:white'];
+
+	structure[gender].slice(0).reverse().forEach(function (layer) {
+		command.push(image_dir + layer.name + (data[layer.name] || 1) + '.png' );
+		command.push('-composite');
+	});
+
+	command.push(output_image);
+
+	im.convert(command, function (err, stdout, stderr) {
 		if (err) {
 			throw err;
 		}
 
-		res.sendfile(cwd + '/out.jpg', {}, function (err) {
-			console.log(111);
+		res.sendfile(output_image, function () {
+			fs.unlink(output_image);
 		});
 	});
 });
