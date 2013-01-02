@@ -77,7 +77,9 @@ server.get('/image', function (req, res) {
 			'Content-Type': 'image/jpeg'
 		});
 
-		res.sendfile(cwd + '/out.jpg');
+		res.sendfile(cwd + '/out.jpg', {}, function (err) {
+			console.log(111);
+		});
 	});
 });
 
