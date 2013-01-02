@@ -68,19 +68,17 @@ server.get('/image', function (req, res) {
 
 	var cwd = process.cwd();
 
-	res.end(cwd);
+	im.composite(['-watermark', '30%', '-gravity', 'SouthEast', cwd + '/1.jpg', cwd + '/2.jpg'], function (err, stdout, stderr) {
+		if (err) {
+			throw err;
+		}
 
-//	im.composite(['-watermark', '30%', '-gravity', 'SouthEast', 'watermark.png', 'input.png'], function (err, stdout, stderr) {
-//		if (err) {
-//			throw err;
-//		}
-//
-//		res.header({
-//			'Content-Type': 'image/png'
-//		});
-//
-//		res.end(stdout);
-//	});
+		res.header({
+			'Content-Type': 'image/jpeg'
+		});
+
+		res.end(stdout);
+	});
 });
 
 //A Route for Creating a 500 Error (Useful to keep around)
