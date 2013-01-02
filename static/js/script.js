@@ -1,7 +1,7 @@
 /* Author: YOUR NAME HERE
 */
 
-$(document).ready(function() {   
+jQuery(function($) {
 
   var socket = io.connect();
 
