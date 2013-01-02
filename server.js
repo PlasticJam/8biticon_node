@@ -73,10 +73,6 @@ server.get('/image', function (req, res) {
 			throw err;
 		}
 
-		res.header({
-			'Content-Type': 'image/jpeg'
-		});
-
 		res.sendfile(cwd + '/out.jpg', {}, function (err) {
 			console.log(111);
 		});
