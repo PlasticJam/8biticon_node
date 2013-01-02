@@ -4,7 +4,7 @@ var im = require('imagemagick'),
 	connect = require('connect'),
 	express = require('express'),
 	io = require('socket.io'),
-	port = (process.env.PORT || 8080);
+	port = (process.env.PORT || 8421);
 
 //Locate pidfile
 pidfile('/var/run/node-pid.pid');
@@ -68,7 +68,7 @@ server.get('/image', function (req, res) {
 
 	var cwd = process.cwd();
 
-	im.composite(['-watermark', '30%', '-gravity', 'SouthEast', '-compose', 'atop', cwd + '/2.jpg', cwd + '/1.jpg', cwd + '/out.jpg'], function (err, stdout, stderr) {
+	im.composite(['-compose', 'atop', cwd + '/2.jpg', cwd + '/1.jpg', cwd + '/out.jpg'], function (err, stdout, stderr) {
 		if (err) {
 			throw err;
 		}
@@ -77,7 +77,7 @@ server.get('/image', function (req, res) {
 			'Content-Type': 'image/jpeg'
 		});
 
-		res.renderFile(cwd + '/out.jpg');
+		res.sendfile(cwd + '/out.jpg');
 	});
 });
 
