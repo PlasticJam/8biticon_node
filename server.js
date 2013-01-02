@@ -67,7 +67,8 @@ server.get('/image', function (req, res) {
 	var im = require('imagemagick');
 
 	var cwd = process.cwd();
-	console.log(cwd);
+
+	res.end(cwd);
 
 //	im.composite(['-watermark', '30%', '-gravity', 'SouthEast', 'watermark.png', 'input.png'], function (err, stdout, stderr) {
 //		if (err) {
