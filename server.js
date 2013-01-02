@@ -63,7 +63,7 @@ server.get('/', function (req, res) {
 	});
 });
 
-server.get('/', function (req, res) {
+server.get('/image', function (req, res) {
 	var im = require('imagemagick');
 
 	var cwd = process.cwd();
