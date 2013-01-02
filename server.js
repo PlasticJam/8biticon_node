@@ -68,7 +68,7 @@ server.get('/image', function (req, res) {
 
 	var cwd = process.cwd();
 
-	im.composite(['-watermark', '30%', '-gravity', 'SouthEast', cwd + '/1.jpg', cwd + '/2.jpg'], function (err, stdout, stderr) {
+	im.composite(['-watermark', '30%', '-gravity', 'SouthEast', '-compose', 'atop', cwd + '/2.jpg', cwd + '/1.jpg', cwd + '/out.jpg'], function (err, stdout, stderr) {
 		if (err) {
 			throw err;
 		}
@@ -77,7 +77,7 @@ server.get('/image', function (req, res) {
 			'Content-Type': 'image/jpeg'
 		});
 
-		res.end(stdout);
+		res.renderFile(cwd + '/out.jpg');
 	});
 });
 
