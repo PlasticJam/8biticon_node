@@ -6,7 +6,7 @@ var im = require('imagemagick'),
 	express = require('express'),
 	fs = require('fs'),
 	io = require('socket.io'),
-	port = (process.env.PORT || 8421);
+	port = 8421; //port = (process.env.PORT || 8421);
 
 //Locate pidfile
 pidfile('/var/run/node-pid.pid');
