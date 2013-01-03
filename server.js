@@ -97,7 +97,7 @@ server.post('/constructor/download/', function (req, res) {
 			throw err;
 		}
 
-		res.sendfile(output_image, function () {
+		res.download(output_image, 'download.jpg', function () {
 			fs.unlink(output_image);
 		});
 	});
