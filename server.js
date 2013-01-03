@@ -44,7 +44,7 @@ if ('mindfreakthemon' == server.get('env')) {
 server.listen(port);
 
 //Setup Socket.IO
-var io = io.listen(server);
+/*var io = io.listen(server);
 io.sockets.on('connection', function (socket) {
 	console.log('Client Connected');
 	socket.on('message', function (data) {
@@ -54,7 +54,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('disconnect', function () {
 		console.log('Client Disconnected.');
 	});
-});
+});*/
 
 
 ///////////////////////////////////////////
@@ -63,15 +63,15 @@ io.sockets.on('connection', function (socket) {
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
 
-var structure = require('./static/8bit/js/8settings.json');
-
-server.get('/', function (req, res) {
+/*server.get('/', function (req, res) {
 	res.render('index.jade', {
 		title: 'Super Mega Test', description: 'Super Mega Description', author: 'Super Mega Me', analyticssiteid: 'XXXXXXX'
 	});
-});
+});*/
 
-server.get('/constructor/download/', function (req, res) {
+var structure = require('./static/8bit/js/8settings.json');
+
+server.post('/constructor/download/', function (req, res) {
 	var data = req.body.data || {},
 		gender = ['male', 'female'].indexOf(req.body.gender) === -1
 			? 'male'
