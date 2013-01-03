@@ -43,31 +43,11 @@ if ('mindfreakthemon' == server.get('env')) {
 
 server.listen(port);
 
-//Setup Socket.IO
-/*var io = io.listen(server);
-io.sockets.on('connection', function (socket) {
-	console.log('Client Connected');
-	socket.on('message', function (data) {
-		socket.broadcast.emit('server_message', data);
-		socket.emit('server_message', data);
-	});
-	socket.on('disconnect', function () {
-		console.log('Client Disconnected.');
-	});
-});*/
-
-
 ///////////////////////////////////////////
 //              Routes                   //
 ///////////////////////////////////////////
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
-
-/*server.get('/', function (req, res) {
-	res.render('index.jade', {
-		title: 'Super Mega Test', description: 'Super Mega Description', author: 'Super Mega Me', analyticssiteid: 'XXXXXXX'
-	});
-});*/
 
 var structure = require('./static/8bit/js/8settings.json');
 
@@ -86,10 +66,11 @@ server.post('/constructor/download/', function (req, res) {
 		command = ['-size', '400x400', 'xc:white'];
 
 	structure[gender].slice(0).reverse().forEach(function (layer) {
-		command.push(image_dir + layer.name + (data[layer.name] || 1) + '.png' );
-		command.push('-composite');
+		command.push(image_dir + layer.name + (data[layer.name] || 1) + '.png', '-composite');
 	});
 
+	command.push('-fill', 'white', '-draw', 'rectangle 0,388 400,400');
+	command.push('-fill', '#636363', '-pointsize', '10', '-draw', 'gravity NorthWest text 290,388 \'made by 8biticon.com\'');
 	command.push(output_image);
 
 	im.convert(command, function (err, stdout, stderr) {
